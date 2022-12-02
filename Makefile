@@ -9,9 +9,9 @@ OBJS = $(patsubst %.c, ./bin/%.o, $(NOTDIR_SRC))
 TARGET_LIST = $(patsubst %.c, %, $(NOTDIR_SRC))
 all:$(TARGET_LIST)
 $(TARGET_LIST):$(OBJS)
-	@echo $@
+#	@echo $@
 	$(CXX) -o ./bin/$@ ./bin/$@.o
-	@echo $(TARGET_LIST)
+#	@echo $(TARGET_LIST)
 ./bin/%.o:%.c
 	$(CXX) -c  $(CFLAGS) $< -o $@  
 .PHONY:clean  
