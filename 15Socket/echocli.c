@@ -136,28 +136,6 @@ ssize_t readline(int sockfd, void *buf, size_t maxline)
 void echo_cli(int sock)
 {
 
-	// while (fgets(sendbuf, sizeof(sendbuf), stdin) != NULL)
-	// {
-	// 	written(sock, sendbuf, strlen(sendbuf));
-
-	// 	int ret = readline(sock, recvbuf, sizeof(recvbuf));
-	// 	if (ret == -1)
-	// 	{
-	// 		ERR_EXIT("read");
-	// 	}
-	// 	else if (ret == 0)
-	// 	{
-	// 		printf("Client closed.\n");
-	// 		break;
-	// 	}
-
-	// 	fputs(recvbuf, stdout);
-
-	// 	memset(recvbuf, 0, sizeof(recvbuf));
-	// 	memset(sendbuf, 0, sizeof(sendbuf));
-	// }
-	// close(sock);
-
 	fd_set rset;
 	FD_ZERO(&rset);
 
@@ -168,6 +146,8 @@ void echo_cli(int sock)
 
 	char sendbuf[1204] = {0};
 	char recvbuf[1024] = {0};
+
+	int stdineof = 0;
 
 	while(1)
 	{
@@ -201,13 +181,20 @@ void echo_cli(int sock)
 		}
 		if(FD_ISSET(fd_stdin, &rset))
 		{
-			 if(fgets(sendbuf, sizeof(sendbuf), stdin) == NULL)
-			 	break;
-			written(sock, sendbuf, strlen(sendbuf));
-			memset(sendbuf, 0, sizeof(sendbuf));
+			if(fgets(sendbuf, sizeof(sendbuf), stdin) == NULL)
+			{
+				stdineof = 1;
+				shutdown(sock, SHUT_WR);
+			}
+			else if(stdineof == 0)
+			{
+				written(sock, sendbuf, strlen(sendbuf));
+				memset(sendbuf, 0, sizeof(sendbuf));
+			}
+
 		}
 	}
-	close(sock);
+	//close(sock);
 }
 
 int main(void)

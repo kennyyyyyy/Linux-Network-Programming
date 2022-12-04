@@ -3,6 +3,10 @@
         "stdio.h": "c",
         "types.h": "c",
         "unistd.h": "c",
-        "stdlib.h": "c"
-    }
+        "stdlib.h": "c",
+        "tiout.h": "c",
+        "select.h": "c",
+        "errno.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
