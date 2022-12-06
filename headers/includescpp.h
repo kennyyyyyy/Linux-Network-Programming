@@ -16,6 +16,11 @@
 #include <poll.h>
 #include <sys/epoll.h>
 
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
 #define ERR_EXIT(m)         \
 	do                      \
 	{                       \
