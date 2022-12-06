@@ -1,5 +1,5 @@
-#include "tiout.h"
-#include "datamgr.h"
+#include "../headers/tiout.h"
+#include "../headers/datamgr.h"
 
 
 void echo_srv(int conn)
@@ -51,10 +51,7 @@ int main(void)
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(6666);
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	// servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	// inet_aton()"127.0.0.1", &servaddr.sin_addr);
 
-	// set REUSEADDR opt
 	int on = 1;
 	if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
 		ERR_EXIT("setsocektopt");

@@ -1,5 +1,5 @@
-#include "../headers/tiout.h"
 #include "../headers/datamgr.h"
+
 
 
 void echo_cli(int sock)
@@ -68,8 +68,10 @@ void echo_cli(int sock)
 
 int main(void)
 {
+	//signal(SIGCHLD, SIG_IGN);
+	
 	int sock;
-	if((sock = socket(AF_INET, SOCK_STREAM, 0) )< 0 )
+	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
 		ERR_EXIT("socket");
 	}
@@ -77,19 +79,10 @@ int main(void)
 	memset(&servaddr, 0, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons(6666);
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-	
-	int ret = connect_timeout(sock, &servaddr, 5);
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-	if(ret == -1 && errno == ETIMEDOUT)
-	{
-		printf("connect time out\n");
-		return 1;
-	}
-	else if(ret == -1)
-	{
-		ERR_EXIT("connect_timeout");
-	}
+	if (connect(sock, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+		ERR_EXIT("Connect");
 
 	struct sockaddr_in loacladdr;
 	socklen_t addrlen = sizeof(loacladdr);
@@ -98,7 +91,6 @@ int main(void)
 
 	printf("ip = %s port = %d\n", inet_ntoa(loacladdr.sin_addr), ntohs(loacladdr.sin_port));
 
-
-	close(sock);
+	echo_cli(sock);
 	return 0;
 }
